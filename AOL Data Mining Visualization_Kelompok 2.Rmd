@@ -1,0 +1,170 @@
+---
+title: "Assignment Data Mining Kelompok 2"
+output: html_document
+date: "2024-05-29"
+---
+Kelompok 2:
+James Nicholas Tan 2702274923
+Shyra Alexandria 2702291356
+Vincent Moswen 2702299863
+
+
+1. Describe your dataset and the issue you want to raise based on the dataset
+Country: The name of the country.
+Year: The year of the data.
+PM2.5: The level of PM2.5 particles.
+PM10: The level of PM10 particles.
+TotalDeaths: The total number of deaths.
+PMDeaths: The number of deaths attributed to particulate matter pollution.
+CitiesCount: The number of cities considered in the dataset for that entry.
+
+We are using correlation analysis to investigate the correlation between PM2.5, PM10 levels, and the number of deaths.The issue we raised based on this dataset does PM2.5 and PM10 make you prone to death.
+
+
+```{r}
+library(ggplot2)
+library(plotly)
+library(readr)
+library(tidyr)
+
+# Load the dataset without showing column type messages
+polution <- read_csv('cleaned_dataset.csv', show_col_types = FALSE)
+
+# Histogram for PM2.5
+p1 <- ggplot(polution, aes(x = `PM2.5`)) +
+  geom_histogram(binwidth = 5, fill = 'blue', color = 'black') +
+  ggtitle('Distribution of PM2.5') +
+  xlab('PM2.5 Levels') +
+  ylab('Frequency')
+
+# Convert ggplot to plotly for interactivity
+ggplotly(p1)
+
+
+```
+The histogram shows the distribution of PM2.5 levels.
+The x-axis represents PM2.5 levels.
+The y-axis represents the frequency, i.e., the number of occurrences of each PM2.5 level range.
+Each bar represents the frequency of PM2.5 levels within a specific range.
+The histogram shows how PM2.5 levels are distributed across different ranges. The height of each bar indicates how many data points within range of PM2.5 levels. Showing that low PM2.5 levels are common, while higher levels are relatively rare. The right-skewed nature of the histogram indicates that although higher PM2.5 levels do occur, they are not the normal.
+
+```{r cars}
+p2 <- ggplot(polution, aes(x = factor(Country), y = CitiesCount)) +
+  geom_bar(stat = 'identity', fill = 'green') +
+  ggtitle('Number of Cities Monitored by Country') +
+  xlab('Country') +
+  ylab('Number of Cities') +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplotly(p2)
+```
+This bar chart shows numbers of city monitored by country.
+The X-Axis represents country.
+The Y-Axis represents the number of cities.
+Each bar reflects to a country and the number of cities it monitored.
+The bar chart shows how many country and number of cities is monitored within the country.The height of the data shows how many cities is monitored by a country.Some countries have significantly more monitored cities than the others as it is indicated by taller bars.
+
+
+```{r}
+# 3. Box Plot for PM10
+p3 <- ggplot(polution, aes(y = `PM10`)) +
+  geom_boxplot(fill = 'orange', color = 'black') +
+  ggtitle('Box Plot of PM10') +
+  ylab('PM10 Levels')
+
+ggplotly(p3)
+```
+The box plot shows the distribution of PM10 levels.
+The y-axis represents the levels of PM10. The values range from 0 to 400.
+The box in the plot (colored orange) represents the interquartile range (IQR)
+The bottom of the box indicates the first quartile (Q1), and the top of the box indicates the third quartile (Q3).
+The line inside the box represents the median (Q2) of the PM10 levels.
+The median PM10 level is close to the middle of the IQR. Most PM10 levels are between the lower and upper whiskers. There are many outliers above the upper whisker, showing some areas have very high PM10 levels. The distribution has more PM10 levels towards the lower end, with a few high values skewing it. This box plot clearly shows the central trend, variability, and outliers in PM10 levels.
+
+
+```{r}
+# 4. Density Plot for TotalDeaths
+p4 <- ggplot(polution, aes(x = TotalDeaths)) +
+  geom_density(fill = 'purple') +
+  ggtitle('Density Plot of Total Deaths') +
+  xlab('Total Deaths')
+
+ggplotly(p4)
+```
+The density plot shows the density of total deaths.
+The X-Axis represents total number of deaths.
+The Y-Axis represents the density of total deaths.
+The purple area outlined in black represents the density of the total death.
+The density plot shows the density of total death. the outlined in black represents the density of total deaths. The highest peak of the curve occurs around 30 deaths, that indicates the most frequent number of death in dataset.
+
+
+```{r}
+# 5. Scatter Plot for PM2.5 vs. TotalDeaths
+p5 <- ggplot(polution, aes(x = `PM2.5`, y = TotalDeaths)) +
+  geom_point(color = 'blue') +
+  ggtitle('PM2.5 vs. Total Deaths') +
+  xlab('PM2.5 Levels') +
+  ylab('Total Deaths')
+
+ggplotly(p5)
+```
+This scatter plot visualizes the relationship between PM2.5 and total deaths from different data in the dataset. 
+X-Axis (PM2.5 Levels): Represents the concentration of PM2.5 particles in the air.
+Y-Axis (Total Deaths): Represents the total number of deaths for each corresponding PM2.5 level.
+The scatter plot shows a general upward trend, suggesting that as PM2.5 increase, the total number of deaths tends to increase as well. This indicates a positive correlation between PM2.5 pollution and total mortality.
+
+
+```{r}
+# 6. Box Plot for PM2.5 by Year
+p6 <- ggplot(polution, aes(x = factor(Year), y = `PM2.5`)) +
+  geom_boxplot(fill = 'lightblue', color = 'black') +
+  ggtitle('PM2.5 Levels by Year') +
+  xlab('Year') +
+  ylab('PM2.5 Levels')
+
+ggplotly(p6)
+```
+
+This box plot represent of the distribution of PM2.5 levels across different years.
+X-Axis (Year): Represents the years from 2010 to 2017.
+Y-Axis (PM2.5 Levels): Represents the concentration of PM2.5 particles in the air
+so far we observer that The median PM2.5 levels seem to be relatively stable from 2010 to 2017 around 20-30. There are some outliers each year, indicating that some locations had significantly higher PM2.5 levels compared to the other.
+The trend there isn't a clear downward or upward trend in median PM2.5 levels over the given years.
+
+
+```{r}
+# 7. Bubble Chart for PM2.5, TotalDeaths, and PMDeaths
+p7 <- ggplot(polution, aes(x = `PM2.5`, y = TotalDeaths, size = PMDeaths, color = factor(Year))) +
+  geom_point(alpha = 0.7) +
+  ggtitle('PM2.5, Total Deaths, and PM Deaths') +
+  xlab('PM2.5 Levels') +
+  ylab('Total Deaths')
+
+ggplotly(p7)
+```
+The scatter plot shows the relationship between PM2.5 levels and total deaths, with data points color-coded by year from 2010 to 2017. The size of each data point appears to correspond to PM deaths.
+There is a noticeable trend indicating that higher PM2.5 levels are associated with an increase in total deaths. However, there is a significant spread in the data, suggesting other factors might also play a role.
+Each year is represented by a different color, allowing us to observe any temporal trends.
+The size of each data point represents PM deaths. Larger points indicate higher PM deaths. Showing how PM deaths contribute to total deaths across different levels of PM2.5 and years.
+
+
+```{r}
+polution_long <- pivot_longer(polution, cols = c(`PM2.5`, `PM10`), names_to = 'Particulate', values_to = 'Value')
+
+p8 <- ggplot(polution_long, aes(x = factor(Country), y = Value, fill = Particulate)) +
+  geom_bar(stat = 'identity', position = 'stack') +
+  ggtitle('PM2.5 and PM10 by Country') +
+  xlab('Country') +
+  ylab('Levels') +
+  scale_fill_manual(name = "Particulate Matter", values = c('PM2.5' = 'red', 'PM10' = 'blue')) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+ggplotly(p8)
+```
+The bar chart shows the levels of PM2.5 and PM10 particulate matter by country.
+The x-axis represents different countries.
+The y-axis represents the levels of particulate matter (PM2.5 and PM10).
+Blue bars represent PM10 levels.
+Red bars represent PM2.5 levels.
+For each country, you can compare the levels of PM2.5 and PM10. In most cases, PM10 levels are higher than PM2.5 levels, which is expected because PM10 includes larger particles as well as those included in PM2.5. The trend is countries with both high PM2.5 and PM10 levels might be dealing with more severe air quality issues compared to those with lower levels.
+
